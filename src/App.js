@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Layout from "./components/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
-import BackdropContext from "./contexts/backdropContext";
-import OrderContext from "./contexts/orderContext";
+import { CombinedContextProvider } from "./contexts/backdropOrderCombinedContext";
 
 class App extends Component {
   state = {
@@ -18,21 +17,22 @@ class App extends Component {
   render() {
     return (
       <div>
-        <BackdropContext.Provider value={{
-          isShown: this.state.backdropIsShown,
-          show: this.showBackdrop,
-          hide: this.hideBackdrop
-        }}>
-          <OrderContext.Provider value={{
+        <CombinedContextProvider
+          backdropValue={{
+            isShown: this.state.backdropIsShown,
+            show: this.showBackdrop,
+            hide: this.hideBackdrop
+          }}
+          orderValue={{
             isShown: this.state.orderIsShown,
             show: this.showOrder,
             hide: this.hideOrder
-          }}>
-            <Layout>
-              <BurgerBuilder />
-            </Layout>
-          </OrderContext.Provider>
-        </BackdropContext.Provider>
+          }}
+        >
+          <Layout>
+            <BurgerBuilder />
+          </Layout>
+        </CombinedContextProvider>
       </div>
     );
   }

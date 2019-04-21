@@ -1,8 +1,7 @@
 import React from "react";
 import classes from "./BuildControls.module.css";
 import BuildControl from "./BuildControl/BuildControl";
-import BackdropContext from "../../../contexts/backdropContext";
-import OrderContext from "../../../contexts/orderContext";
+import { CombinedContextConsumer } from "../../../contexts/backdropOrderCombinedContext";
 
 const controls = [
   { label: "Salad", type: "salad" },
@@ -22,20 +21,12 @@ const buildControls = (props) => (
         removed={() => props.ingredientRemoved(ctrl.type)}
         disabled={props.disabled[ctrl.type]} />
     ))}
-    <BackdropContext.Consumer>
-    {
-      (backdropContext) => (
-        <OrderContext.Consumer>
-        {(orderContext) => (
-          <button
-            className={classes.OrderButton}
-            disabled={!props.purchasable}
-            onClick={() => {orderContext.show(); backdropContext.show(); }}>ORDER NOW</button>
-        )}
-        </OrderContext.Consumer>
-      )
-    }
-    </BackdropContext.Consumer>
+    <CombinedContextConsumer>
+      {({backdropCtx, orderCtx}) => (<button
+        className={classes.OrderButton}
+        disabled={!props.purchasable}
+        onClick={() => {orderCtx.show(); backdropCtx.show(); }}>ORDER NOW</button>)}
+    </CombinedContextConsumer>
   </div>
 );
 

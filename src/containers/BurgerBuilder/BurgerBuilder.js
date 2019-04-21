@@ -3,7 +3,7 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import OrderContext from "../../contexts/orderContext";
+import { CombinedContextConsumer } from "../../contexts/backdropOrderCombinedContext";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -58,6 +58,10 @@ class BurgerBuilder extends React.Component {
     this.setState({purchasable: sum > 0});
   };
 
+  purchaseConfirmHandler = () => {
+    alert("Thank you for confirming your order.");
+  };
+
   render() {
     const disabledInfo = {
       ...this.state.ingredients
@@ -69,13 +73,17 @@ class BurgerBuilder extends React.Component {
 
     return (
       <>
-        <OrderContext.Consumer>
-          {(orderContext) => (
-            <Modal show={orderContext.isShown}>
-              <OrderSummary ingredients={this.state.ingredients} />
+        <CombinedContextConsumer>
+          {({backdropCtx, orderCtx}) => (
+            <Modal show={orderCtx.isShown}>
+              <OrderSummary
+                ingredients={this.state.ingredients}
+                confirmHandler={this.purchaseConfirmHandler}
+                cancelhandler={() => {backdropCtx.hide(); orderCtx.hide();}}
+              />
             </Modal>
           )}
-        </OrderContext.Consumer>
+        </CombinedContextConsumer>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls
           ingredientAdded={this.addIngredientHandler}

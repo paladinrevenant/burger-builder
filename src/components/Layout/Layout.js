@@ -1,20 +1,17 @@
 import React from "react";
 import classes from "./Layout.module.css";
 import Backdrop from "../UI/Backdrop/Backdrop";
-import BackdropContext from "../../contexts/backdropContext";
-import OrderContext from "../../contexts/orderContext";
+import { CombinedContextConsumer } from "../../contexts/backdropOrderCombinedContext";
 
 const layout = (props) => (
   <>
-    <BackdropContext.Consumer>
-      {(backdrop) => (
-        <OrderContext.Consumer>
-        {(order) => (
-          <Backdrop show={backdrop.isShown} clickHandler={() => {backdrop.hide(); order.hide();}}/>
-        )}
-        </OrderContext.Consumer>
-      )}
-    </BackdropContext.Consumer>
+    <CombinedContextConsumer>
+      {({backdropCtx, orderCtx}) => (
+        <Backdrop
+          show={backdropCtx.isShown}
+          clickHandler={() => {backdropCtx.hide(); orderCtx.hide();}}
+        />)}
+    </CombinedContextConsumer>
     <div>Toolbar, SideDrawer, Backdrop</div>
     <main className={classes.Content}>
       {props.children}
