@@ -78,6 +78,7 @@ class BurgerBuilder extends React.Component {
             <Modal show={orderCtx.isShown}>
               <OrderSummary
                 ingredients={this.state.ingredients}
+                price={this.state.totalPrice}
                 confirmHandler={this.purchaseConfirmHandler}
                 cancelhandler={() => {backdropCtx.hide(); orderCtx.hide();}}
               />
