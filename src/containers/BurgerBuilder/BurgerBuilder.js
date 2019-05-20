@@ -3,7 +3,6 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
-import { CombinedContextConsumer } from "../../contexts/backdropOrderCombinedContext";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -21,7 +20,8 @@ class BurgerBuilder extends React.Component {
       meat: 0
     },
     totalPrice: 4,
-    purchasable: false
+    purchasable: false,
+    isSummaryShown: false
   };
 
   addIngredientHandler = (type) => {
@@ -58,8 +58,16 @@ class BurgerBuilder extends React.Component {
     this.setState({purchasable: sum > 0});
   };
 
+  checkoutStartHandler = () => {
+    this.setState({isSummaryShown: true});
+  };
+
   purchaseConfirmHandler = () => {
     alert("Thank you for confirming your order.");
+  };
+
+  purchaseCancelHandler = () => {
+    this.setState({isSummaryShown: false});
   };
 
   render() {
@@ -73,22 +81,19 @@ class BurgerBuilder extends React.Component {
 
     return (
       <>
-        <CombinedContextConsumer>
-          {({backdropCtx, orderCtx}) => (
-            <Modal show={orderCtx.isShown}>
-              <OrderSummary
-                ingredients={this.state.ingredients}
-                price={this.state.totalPrice}
-                confirmHandler={this.purchaseConfirmHandler}
-                cancelhandler={() => {backdropCtx.hide(); orderCtx.hide();}}
-              />
-            </Modal>
-          )}
-        </CombinedContextConsumer>
+        <Modal show={this.state.isSummaryShown} clickHandler={this.purchaseCancelHandler}>
+          <OrderSummary
+            ingredients={this.state.ingredients}
+            price={this.state.totalPrice}
+            confirmHandler={this.purchaseConfirmHandler}
+            cancelhandler={this.purchaseCancelHandler}
+          />
+        </Modal>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
+          orderClicked={this.checkoutStartHandler}
           disabled={disabledInfo}
           price={this.state.totalPrice}
           purchasable={this.state.purchasable} />
