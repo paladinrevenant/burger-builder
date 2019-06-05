@@ -19,7 +19,7 @@ const sideDrawer = (props) => {
         </nav>
       </div>
     </>
-  )
+  );
 };
 
 export default sideDrawer;
